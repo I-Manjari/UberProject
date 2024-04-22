@@ -1,56 +1,59 @@
-import mysql.connector
+**Uber-Like Cab Booking System**
 
-# Establish database connection
-conn = mysql.connector.connect(host='localhost', user='root', password='Manjari@14', database='uber')
-my_cursor = conn.cursor(dictionary=True)
+**Description:**
+This project is a simple implementation of a cab booking system similar to Uber. It consists of functionalities for registering drivers, assigning cabs to users, and managing driver availability.
 
-def insert_driver_into_db(driver_name, car_number):
-    sql = "INSERT INTO driver (car_number, driver_name, availability) VALUES (%s, %s, %s)"
-    val = (car_number, driver_name, "true")
-    my_cursor.execute(sql, val)
-    conn.commit()
+**Technologies Used:**
+- Python
+- MySQL
+- mysql.connector library
 
-def update_availability(driver):
-    cab_id = driver["driver_id"]
-    update_sql = "UPDATE driver SET availability = 'False' WHERE driver_id = %s"
-    val = (cab_id,)
-    my_cursor.execute(update_sql, val)
-    conn.commit()
+**Project Structure:**
+- **main.py:** Contains the main functionality of the cab booking system.
+- **README.md:** This file, providing an overview of the project and instructions for usage.
+- **database.sql:** SQL script to create the necessary database schema.
 
-def get_available_drivers():
-    sql = 'SELECT * FROM driver WHERE availability = "true"'
-    my_cursor.execute(sql)
-    driver_list = my_cursor.fetchall()
-    return driver_list
+**Installation:**
+1. Install Python (if not already installed) from [python.org](https://www.python.org/).
+2. Install MySQL (if not already installed) from [mysql.com](https://www.mysql.com/).
+3. Install the mysql.connector library:
+    ```
+    pip install mysql-connector-python
+    ```
 
-def register_driver(driver_name, car_number):
-    insert_driver_into_db(driver_name, car_number)
-    print("Driver registered successfully!")
+**Setup:**
+1. Run the `database.sql` script in your MySQL database to create the necessary schema.
+2. Update the database connection details in `main.py`:
+    - Update the `host`, `user`, `password`, and `database` variables in the `mysql.connector.connect()` function with your MySQL connection details.
 
-def assign_cab_to_user():
-    user_name = input("Enter user name: ")
-    available_drivers = get_available_drivers()
+**Usage:**
+1. Open a terminal or command prompt.
+2. Navigate to the directory containing `main.py`.
+3. Run the following command to start the program:
+    ```
+    python main.py
+    ```
+4. Choose between "driver" and "user" modes:
+    - **Driver Mode:** Register new drivers by providing their name and car number.
+    - **User Mode:** Assign cabs to users by entering their name.
 
-    if available_drivers:
-        driver = available_drivers[0]
-        print("Your cab is assigned.")
-        print("Driver name:", driver["driver_name"])
-        print("Car number:", driver["car_number"])
-        update_availability(driver)
-    else:
-        print("Sorry, no cabs available at the moment.")
+**Functionality:**
+- **Register Driver:**
+    - Allows adding new drivers to the system.
+    - Requires input of driver name and car number.
+    - Updates the database with the new driver's information.
 
-while True:
-    choice = input("Enter choice (driver/user): ")
+- **Assign Cab to User:**
+    - Assigns an available cab to a user.
+    - Checks for available drivers in the database.
+    - If available, assigns the first available driver to the user.
+    - Marks the assigned driver as unavailable in the database.
 
-    if choice == "driver":
-        driver_name = input("Enter driver name: ")
-        car_number = input("Enter car number: ")
-        register_driver(driver_name, car_number)
+**Contributors:**
+- Manjari
 
-    elif choice == "user":
-        assign_cab_to_user()
+**License:**
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-    else:
-        print("Invalid choice.")
-
+**Disclaimer:**
+This project is for educational purposes only and is not affiliated with Uber or any other company.
